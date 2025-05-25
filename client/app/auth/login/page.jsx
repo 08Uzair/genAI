@@ -21,8 +21,9 @@ const Page = () => {
     dispatch(signin(form));
     toast.success("Login Sucessfully");
     setTimeout(() => {
+// router.push('/')
       window.location.reload();
-    }, 600);
+    }, 5000);
   };
 
   useEffect(() => {

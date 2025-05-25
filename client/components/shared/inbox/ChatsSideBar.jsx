@@ -32,7 +32,7 @@ const ChatsSideBar = () => {
   const conversations = useSelector(
     (state) => state.conversation.conversations
   );
-  console.log(conversations , "This are Conversations");
+  console.log(conversations, "This are Conversations");
   const filteredUsers = useMemo(() => {
     return users?.filter((user) => user?._id !== currentUser);
   }, [users, currentUser?._id]);
@@ -158,9 +158,12 @@ const ChatsSideBar = () => {
                     border flex items-center justify-center space-x-3`}
                   >
                     <Image
-                      className="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0"
-                      // src={item.chatWith.imageUrl || "https://cdn4.iconfinder.com/data/icons/fashion-icons/154/hipster-512.png"}
-                      src=   {item?.chatWith?.imageUrl}
+                      className="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0 object-fill"
+                      // src={item.chatWith.imageUrl || }
+                      src={
+                        item?.chatWith?.imageUrl ||
+                        "https://cdn4.iconfinder.com/data/icons/fashion-icons/154/hipster-512.png"
+                      }
                       alt="User Avatar"
                       width={40}
                       height={40}

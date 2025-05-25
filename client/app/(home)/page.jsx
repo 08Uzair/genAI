@@ -9,9 +9,6 @@ import { toast } from "react-toastify";
 export default function HeroSection() {
   const router = useRouter();
   const { isAuthenticated } = useAuthenticated();
-  const handleRoute = (path) => {
-    router.push(path);
-  };
 
   const handleLogOut = () => {
     localStorage.clear();
@@ -37,21 +34,22 @@ export default function HeroSection() {
         {/* Auth Button */}
         <div>
           {isAuthenticated ? (
-            <button
-              onClick={handleLogOut}
-              className="flex items-center gap-2 px-5 py-3 cursor-pointer rounded-lg bg-gray-100 hover:bg-gray-200 transition text-gray-800 text-lg"
-            >
-              <LogOut className="w-5 h-5" />
-              Logout
-            </button>
+            <Link href={"/auth/login"}>
+              <button
+                onClick={handleLogOut}
+                className="flex items-center gap-2 px-5 py-3 cursor-pointer rounded-lg bg-gray-100 hover:bg-gray-200 transition text-gray-800 text-lg"
+              >
+                <LogOut className="w-5 h-5" />
+                Logout
+              </button>
+            </Link>
           ) : (
-            <button
-              onClick={handleRoute("/auth/login")}
-              className="flex items-center gap-2 px-5 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition text-lg"
-            >
-              <LogIn className="w-5 h-5" />
-              Login
-            </button>
+            <Link href={"/auth/login"}>
+              <button className="flex items-center gap-2 px-5 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition text-lg">
+                <LogIn className="w-5 h-5" />
+                Login
+              </button>
+            </Link>
           )}
         </div>
       </header>

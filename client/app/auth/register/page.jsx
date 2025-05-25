@@ -30,7 +30,7 @@ const Page = () => {
 
     toast.success("Registered Sucessfully");
     setTimeout(() => {
-      window.location.reload();
+      router.push("/");
     }, 600);
   };
 
