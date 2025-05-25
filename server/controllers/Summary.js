@@ -7,7 +7,7 @@ export const generateSummary = async (req, res) => {
   try {
     // Call Gemini API to generate the summary
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyACI9UkasdbCLJ9Nz-yt1N4J0OQ1PkbOwY`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyA_rt8FpxClDON9YhcGe_UAz5cLmOHfig8`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -76,3 +76,16 @@ export const getSummary = async (req, res) => {
   }
 };
 
+export const getUserSummary = async (messageId) => {
+  try {
+    const summaries = await Summary.find().sort({ createdAt: -1 });
+    if (messageId) {
+      const filteredSummaries = summaries.filter(
+        (summary) => summary.messageId === messageId
+      );
+      return filteredSummaries;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};

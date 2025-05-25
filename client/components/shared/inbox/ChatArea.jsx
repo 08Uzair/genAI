@@ -8,24 +8,30 @@ import { getMessagesByMessageId } from "@/state/actions/message";
 import { createSummary, fetchSummary } from "@/state/actions/summary";
 import { createSuggestion, fetchSuggestion } from "@/state/actions/suggestion";
 import { useParams } from "next/navigation";
-
+import Image from "next/image";
+import { getRelativeTime } from "@/utils/method";
 const ChatArea = () => {
   const [socket, setSocket] = useState(null);
   const [messageText, setMessageText] = useState("");
   const [messages, setMessages] = useState({});
-  const [userList, setUserList] = useState([]);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [greetingMessage, setGreetingMessage] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [selected, setSelected] = useState("");
-
+  const [onlineUsers, setOnlineUsers] = useState({});
+  const selectedUserDetails = useSelector(
+    (state) => state.users.selectedUserDetails || []
+  );
+  console.log("selectedUserDetails", selectedUserDetails);
   const messageEndRef = useRef(null);
   const { id } = useParams();
   const dispatch = useDispatch();
 
   const suggestion = useSelector((state) => state?.suggestion?.suggestion?.[0]);
-  const recipientId = useSelector((state) => state.conversation.selectedConversationId);
-  const userSummary = useSelector((state) => state?.summaryReducer?.summary?.[0]);
+  const recipientId = useSelector(
+    (state) => state.conversation.selectedConversationId
+  );
+  const userSummary = useSelector(
+    (state) => state?.summaryReducer?.summary?.[0]
+  );
   const reduxMessages = useSelector((state) => state.message || {});
   const { user } = useAuthenticated();
   const senderId = user?._id;
@@ -74,7 +80,9 @@ const ChatArea = () => {
   }, [reduxMessages, recipientId, senderId]);
 
   const messagesArray = messages[recipientId] || [];
-  const longStringWithNewlines = messagesArray.map((msg) => msg.message).join("\n");
+  const longStringWithNewlines = messagesArray
+    .map((msg) => msg.message)
+    .join("\n");
 
   // Send message via socket
   const handleSendMessage = () => {
@@ -89,10 +97,13 @@ const ChatArea = () => {
         const existingMessages = prevMessages[recipientId] || [];
         return {
           ...prevMessages,
-          [recipientId]: [...existingMessages, { senderId, message: messageText }],
+          [recipientId]: [
+            ...existingMessages,
+            { senderId, message: messageText },
+          ],
         };
       });
-
+      dispatch(fetchSuggestion(id));
       setMessageText("");
       setSelected(""); // clear suggestion use
     } else {
@@ -126,10 +137,10 @@ const ChatArea = () => {
 
   // Socket.IO connection
   useEffect(() => {
-    if (!user?._id || !user?.username || socket) return;
-
+    if (!user?._id || !user?.username) return;
+    if (socket) return;
     const newSocket = io("http://localhost:8800", {
-      transports: ["websocket"],
+      transports: ["websocket"], // Optional: to force WS protocol
     });
 
     setSocket(newSocket);
@@ -140,6 +151,7 @@ const ChatArea = () => {
     });
 
     newSocket.on("message", (message) => {
+      console.log("Received message:", message);
       setMessages((prevMessages) => {
         const senderId = message.senderId;
         const existingMessages = prevMessages[senderId] || [];
@@ -150,11 +162,35 @@ const ChatArea = () => {
       });
     });
 
+    newSocket.on("user-online", ({ userId }) => {
+      setOnlineUsers((prev) => ({ ...prev, [userId]: true }));
+    });
+
+    newSocket.on("user-offline", ({ userId }) => {
+      setOnlineUsers((prev) => {
+        const newStatus = { ...prev };
+        delete newStatus[userId];
+        return newStatus;
+      });
+    });
+
+    newSocket.on("online-users", (userIds) => {
+      const onlineMap = {};
+      userIds.forEach((id) => {
+        onlineMap[id] = true;
+      });
+      setOnlineUsers((prev) => ({
+        ...prev,
+        ...onlineMap,
+      }));
+    });
+
     newSocket.on("error", (errorMessage) => {
       alert(errorMessage);
     });
 
     return () => {
+      console.log("Disconnecting from Socket.IO server");
       newSocket.disconnect();
     };
   }, [user?._id, user?.username]);
@@ -171,7 +207,31 @@ const ChatArea = () => {
   return (
     <main className="flex-1 flex flex-col bg-white border-r border-gray-100">
       <div className="p-[1.165rem] border-b border-gray-200">
-        <h2 className="text-sm font-semibold">Luis Easton</h2>
+        <h2 className="text-sm font-semibold flex items-center gap-1">
+          {selectedUserDetails.username ? (
+            <>
+              {selectedUserDetails.username} |&nbsp;
+              <span className="flex items-center gap-1">
+                <span
+                  className={`w-2 h-2 rounded-full blink-dot ${
+                    onlineUsers[recipientId] ? "bg-green-500" : "bg-gray-400"
+                  }`}
+                ></span>
+                <span
+                  className={
+                    onlineUsers[recipientId]
+                      ? "text-green-600"
+                      : "text-gray-400"
+                  }
+                >
+                  {onlineUsers[recipientId] ? "Online" : "Offline"}
+                </span>
+              </span>
+            </>
+          ) : (
+            "Select a user to start the chat"
+          )}
+        </h2>
       </div>
 
       <div className="flex-1 p-6 space-y-6 overflow-y-auto">
@@ -179,6 +239,7 @@ const ChatArea = () => {
           messages[recipientId] &&
           messages[recipientId].map((message, index) => {
             const isOwnMessage = message.senderId === senderId;
+
             return (
               <div
                 key={index}
@@ -186,55 +247,86 @@ const ChatArea = () => {
                   isOwnMessage ? "justify-end flex-row-reverse" : ""
                 }`}
               >
-                <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
+                {/* Profile circle */}
+                <Image
+                  className="w-8 h-8 bg-gray-300 rounded-full flex-shrink-0"
+                  // src={item.chatWith.imageUrl || "https://cdn4.iconfinder.com/data/icons/fashion-icons/154/hipster-512.png"}
+                  src={
+                    "https://cdn4.iconfinder.com/data/icons/fashion-icons/154/hipster-512.png"
+                  }
+                  alt="User Avatar"
+                  width={32}
+                  height={32}
+                />
+
+                {/* Message bubble */}
                 <div
-                  className={`p-4 rounded-xl shadow text-sm ${
-                    isOwnMessage
-                      ? "bg-blue-100 text-blue-900"
-                      : "bg-gray-100 text-gray-900"
-                  } max-w-[300px] w-fit break-words`}
+                  className={`p-4 rounded-xl shadow text-sm 
+                ${
+                  isOwnMessage
+                    ? "bg-blue-100 text-blue-900"
+                    : "bg-gray-100 text-gray-900"
+                }
+                max-w-[300px] w-fit break-words`}
                 >
-                  {message.message}
+                  {/* Message text */}
+                  <span>{message.message}</span>
+
+                  {/* Time below message, smaller & gray */}
+                  <div className="text-xs text-gray-500 mt-1">
+                    {getRelativeTime(message.createdAt, "Just Now")}
+                  </div>
                 </div>
               </div>
             );
           })}
+
+        {/* Scroll Anchor */}
         <div ref={messageEndRef} />
       </div>
+      {selectedUserDetails.username ? (
+        <footer className="p-4 border-t border-gray-200">
+          <div className="text-sm text-gray-700 mb-2">Suggested:</div>
+          <div className="flex items-center justify-center text-center">
+            {suggestions.map((text, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  setMessageText(text);
+                  setSelected(text);
+                }}
+                className="p-1 m-2 border border-blue-300 rounded hover:bg-blue-100 transition w-[50%]"
+              >
+                {text}
+              </button>
+            ))}
+          </div>
 
-      <footer className="p-4 border-t border-gray-200">
-        <div className="text-sm text-gray-700 mb-2">Suggested:</div>
-        <div className="flex items-center justify-center text-center">
-          {suggestions.map((text, index) => (
-            <button
-              key={index}
-              onClick={() => {
-                setMessageText(text);
-                setSelected(text);
+          <div className="flex gap-2 mt-2">
+            <input
+              type="text"
+              value={messageText}
+              onChange={handleChange}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSendMessage();
+                }
               }}
-              className="p-1 m-2 border border-blue-300 rounded hover:bg-blue-100 transition w-[50%]"
+              placeholder="Type a message..."
+              className="flex-1 px-4 py-2 border rounded-lg text-sm"
+            />
+            <button
+              onClick={handleSendMessage}
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700"
             >
-              {text}
+              Send
             </button>
-          ))}
-        </div>
-
-        <div className="flex gap-2 mt-2">
-          <input
-            type="text"
-            value={messageText}
-            onChange={handleChange}
-            placeholder="Type a message..."
-            className="flex-1 px-4 py-2 border rounded-lg text-sm"
-          />
-          <button
-            onClick={handleSendMessage}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700"
-          >
-            Send
-          </button>
-        </div>
-      </footer>
+          </div>
+        </footer>
+      ) : (
+        <></>
+      )}
     </main>
   );
 };

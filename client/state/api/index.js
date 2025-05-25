@@ -29,3 +29,6 @@ export const summarizePdf = (formData) =>
       "Content-Type": "multipart/form-data",
     },
   });
+
+// Meta Data
+  export const getMetaData = (messageId) => API.get(`/messages/last/${messageId}`)

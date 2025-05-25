@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { signin } from "@/state/actions/auth";
 import { localStorageProvider } from "@/utils/method";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -18,15 +19,16 @@ const Page = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(signin(form));
+    toast.success("Login Sucessfully");
     setTimeout(() => {
       window.location.reload();
-    }, 900);
+    }, 600);
   };
 
   useEffect(() => {
     const userData = localStorageProvider.getStorage("profile"); // example key
     if (userData) {
-      router.replace("/");
+      router.push("/");
     }
   }, [router]);
 

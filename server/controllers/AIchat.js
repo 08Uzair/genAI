@@ -1,13 +1,16 @@
 import AIchat from "../models/AIchat.js";
 import fetch from "node-fetch";
+import { getUserSummary } from "./Summary.js";
 
 export const createAIchat = async (req, res) => {
   const { userContent, messageId } = req.body;
+  const userSummary = await getUserSummary(messageId);
+  console.log(userSummary?.[0]?.summary, "This is User Summary");
   if (!userContent)
     return res.status(400).json({ error: "No content provided." });
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyACI9UkasdbCLJ9Nz-yt1N4J0OQ1PkbOwY`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyA_rt8FpxClDON9YhcGe_UAz5cLmOHfig8`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -17,7 +20,8 @@ export const createAIchat = async (req, res) => {
               role: "user",
               parts: [
                 {
-                  text: `only important short answer in 2-3 lines ${userContent}`,
+                  text: `This is the summary ${userSummary?.[0]?.summary}   of currently going on chat , you have to refer this for getting context of whatever user queries are there , whatever will be the user queries u have to respond to it in 2-3 lines 
+User Query : ${userContent}`,
                 },
               ],
             },
@@ -68,4 +72,3 @@ export const getAIChat = async (req, res) => {
     res.status(500).json({ message: "failed" });
   }
 };
-

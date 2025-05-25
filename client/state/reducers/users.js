@@ -1,11 +1,25 @@
-import { GET_USERS_BY_ROLE } from "../constants/actionTypes";
+import { GET_USERS_BY_ROLE, GET_USERS_BY_ID } from "../constants/actionTypes";
 
-export default (users = [], action) => {
+const initialState = {
+  users: [],
+  selectedUserDetails: null,
+};
+
+export default (state = initialState, action) => {
   switch (action.type) {
     case GET_USERS_BY_ROLE:
-      return action.payload;
-      break;
+      return {
+        ...state,
+        users: action.payload, 
+      };
+
+    case GET_USERS_BY_ID:
+      return {
+        ...state,
+        selectedUserDetails: action.payload, 
+      };
+
     default:
-      return users;
+      return state;
   }
 };

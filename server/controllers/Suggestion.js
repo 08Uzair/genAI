@@ -11,7 +11,7 @@ export const createSuggestion = async (req, res) => {
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyACI9UkasdbCLJ9Nz-yt1N4J0OQ1PkbOwY`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyA_rt8FpxClDON9YhcGe_UAz5cLmOHfig8`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

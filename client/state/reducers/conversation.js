@@ -8,14 +8,18 @@ const initialState = {
 const conversationReducer = (state = initialState, action) => {
     switch (action.type) {
         case CREATE_CONV:
-            if (!state.conversations.includes(action.payload)) {
+            const exists = state.conversations.some(
+                (conv) => conv.chatWith.id === action.payload.chatWith.id
+            );
+
+            if (!exists) {
                 return {
                     ...state,
                     conversations: [...state.conversations, action.payload]
                 };
             }
             return state;
-
+            
         case GET_CONVs:
             return {
                 ...state,

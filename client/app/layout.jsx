@@ -1,7 +1,6 @@
-import { Geist, Geist_Mono } from "next/font/google";
 import "@/app/globals.css";
 import ReduxProvider from "@/state/reducers/ReduxProvider";
-
+import { ToastContainer } from "react-toastify";
 
 export const metadata = {
   title: "Create Next App",
@@ -12,8 +11,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <ReduxProvider>
-        <body
-        >
+        <body>
+          <ToastContainer />
           {children}
         </body>
       </ReduxProvider>

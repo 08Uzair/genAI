@@ -37,6 +37,13 @@ function setupSocket(httpServer) {
 
       // Optional (only if you still want to send updated list)
       // io.emit("user-list", getUserList());
+
+      const otherOnlineUsers = Object.keys(users).filter((id) => id !== userId);
+      socket.emit("online-users", otherOnlineUsers);
+
+      socket.broadcast.emit("user-online", {
+        userId
+      });
     });
 
     // 📩 Handle messaging
@@ -65,6 +72,10 @@ function setupSocket(httpServer) {
       } else {
         socket.emit("error", "Recipient not found");
       }
+
+      socket.broadcast.emit("user-online", {
+        senderId
+      });
     });
 
     // 🔌 On disconnect
@@ -75,6 +86,11 @@ function setupSocket(httpServer) {
         delete users[userId];
         delete userSockets[socket.id];
         // io.emit("user-list", getUserList()); // optional
+      }
+      if (userId) {
+        socket.broadcast.emit("user-offline", {
+          userId
+        });
       }
     });
 

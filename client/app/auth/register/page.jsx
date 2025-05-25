@@ -1,21 +1,23 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { useDispatch } from 'react-redux';
-import { signup } from '@/state/actions/auth';
-import { useRouter } from 'next/navigation';
-import { localStorageProvider } from '@/utils/method';
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { signup } from "@/state/actions/auth";
+import { useRouter } from "next/navigation";
+import { localStorageProvider } from "@/utils/method";
+import { uploadImageToCloudinary } from "@/utils/uploadImage";
+import { toast } from "react-toastify";
 
 const Page = () => {
   const dispatch = useDispatch();
-    const router = useRouter();
+  const router = useRouter();
   const [form, setForm] = useState({
-    username: '',
-    imageUrl: '',
-    email: '',
-    password: '',
-    role: 'customer'
+    username: "",
+    imageUrl: "",
+    email: "",
+    password: "",
+    role: "customer",
   });
 
   const handleChange = (e) => {
@@ -25,20 +27,34 @@ const Page = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(signup(form));
+
+    toast.success("Registered Sucessfully");
+    setTimeout(() => {
+      window.location.reload();
+    }, 600);
   };
 
-
   useEffect(() => {
-    const userData = localStorageProvider.getStorage('profile');
+    const userData = localStorageProvider.getStorage("profile");
     if (userData) {
-      router.replace('/');
+      router.push("/");
     }
-  }, [router]);
+  }, []);
 
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const imageUrl = await uploadImageToCloudinary(file);
+      setForm({ ...form, imageUrl: imageUrl });
+    }
+  };
 
   return (
     <div className="w-full md:w-1/2 p-8 sm:p-12">
-      <a href="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 light:text-white">
+      <a
+        href="#"
+        className="flex items-center mb-6 text-2xl font-semibold text-gray-900 light:text-white"
+      >
         Next JS
       </a>
       <div className="rounded-lg">
@@ -47,7 +63,10 @@ const Page = () => {
         </h1>
         <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="username" className="block mb-2 text-sm font-medium text-gray-900 light:text-white">
+            <label
+              htmlFor="username"
+              className="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+            >
               Username
             </label>
             <input
@@ -63,22 +82,25 @@ const Page = () => {
           </div>
 
           <div>
-            <label htmlFor="imageUrl" className="block mb-2 text-sm font-medium text-gray-900 light:text-white">
+            <label
+              htmlFor="imageUrl"
+              className="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+            >
               Image URL
             </label>
             <input
-              type="text"
-              id="imageUrl"
-              name="imageUrl"
-              value={form.imageUrl}
-              onChange={handleChange}
-              className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 light:bg-gray-700 light:border-gray-600 light:placeholder-gray-400 light:text-white"
-              placeholder="Enter image URL"
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleImageUpload(e)}
+              className="w-full rounded-2xl border p-2 mb-2"
             />
           </div>
 
           <div>
-            <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 light:text-white">
+            <label
+              htmlFor="email"
+              className="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+            >
               Email
             </label>
             <input
@@ -94,7 +116,10 @@ const Page = () => {
           </div>
 
           <div>
-            <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 light:text-white">
+            <label
+              htmlFor="password"
+              className="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+            >
               Password
             </label>
             <input
@@ -117,8 +142,11 @@ const Page = () => {
           </button>
 
           <p className="text-sm font-light text-gray-500 light:text-gray-400 mt-4">
-            Already have an account?{' '}
-            <Link href="/auth/login" className="font-medium text-primary-600 hover:underline light:text-primary-500">
+            Already have an account?{" "}
+            <Link
+              href="/auth/login"
+              className="font-medium text-primary-600 hover:underline light:text-primary-500"
+            >
               Sign in
             </Link>
           </p>
