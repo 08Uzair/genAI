@@ -8,7 +8,7 @@ export async function middleware(req) {
   const url = req.nextUrl.clone();
   const pathname = url.pathname;
 
-  const protectedRoutes = ['/'];
+  const protectedRoutes = ['/','/inbox'];
 
   const isProtected = protectedRoutes.some((route) =>
     pathname === route || pathname.startsWith(route + '/')

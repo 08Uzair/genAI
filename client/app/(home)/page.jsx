@@ -1,5 +1,6 @@
 "use client";
 
+import useAuthenticated from "@/hooks/useAuthenticated";
 import { LogIn, LogOut } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -7,10 +8,9 @@ import { toast } from "react-toastify";
 
 export default function HeroSection() {
   const router = useRouter();
-  const profile = JSON.parse(localStorage.getItem("profile"));
-
-  const handleRoute = (location) => {
-    router.push(location);
+  const { isAuthenticated } = useAuthenticated();
+  const handleRoute = (path) => {
+    router.push(path);
   };
 
   const handleLogOut = () => {
@@ -36,7 +36,7 @@ export default function HeroSection() {
 
         {/* Auth Button */}
         <div>
-          {profile ? (
+          {isAuthenticated ? (
             <button
               onClick={handleLogOut}
               className="flex items-center gap-2 px-5 py-3 cursor-pointer rounded-lg bg-gray-100 hover:bg-gray-200 transition text-gray-800 text-lg"
@@ -70,7 +70,7 @@ export default function HeroSection() {
           </p>
           <div className="flex flex-wrap gap-6 pt-4">
             <Link
-              href={profile ? `/inbox` : `/auth/login`}
+              href={isAuthenticated ? `/inbox` : `/auth/login`}
               className="inline-flex items-center px-7 py-4 text-white bg-blue-600 hover:bg-blue-700 rounded-xl text-lg font-semibold shadow transition"
             >
               Get Started

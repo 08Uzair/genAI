@@ -1,6 +1,6 @@
 import axios from "axios";
-// http://localhost:8800/ai/chat
-const API = axios.create({ baseURL: "http://localhost:8800" });
+
+const API = axios.create({ baseURL: "https://genai-891g.onrender.com" });
 
 export const signIn = (formData) => API.post("/user/login", formData);
 export const signUp = (formData) => API.post("/user/signup", formData);
@@ -31,4 +31,5 @@ export const summarizePdf = (formData) =>
   });
 
 // Meta Data
-  export const getMetaData = (messageId) => API.get(`/messages/last/${messageId}`)
+export const getMetaData = (messageId) =>
+  API.get(`/messages/last/${messageId}`);

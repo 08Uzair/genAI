@@ -14,6 +14,7 @@ const ChatArea = () => {
   const [socket, setSocket] = useState(null);
   const [messageText, setMessageText] = useState("");
   const [messages, setMessages] = useState({});
+  console.log(messages, "These are Messages");
   const [suggestions, setSuggestions] = useState([]);
   const [selected, setSelected] = useState("");
   const [onlineUsers, setOnlineUsers] = useState({});
@@ -117,6 +118,7 @@ const ChatArea = () => {
       const messageId = `${senderId}_SR_${recipientId}`;
       dispatch(createSummary({ messageId, summary: longStringWithNewlines }));
       dispatch(fetchSummary(messageId));
+      dispatch(fetchSuggestion(id));
     }
   }, [longStringWithNewlines]);
 
@@ -139,7 +141,7 @@ const ChatArea = () => {
   useEffect(() => {
     if (!user?._id || !user?.username) return;
     if (socket) return;
-    const newSocket = io("http://localhost:8800", {
+    const newSocket = io("https://genai-891g.onrender.com", {
       transports: ["websocket"], // Optional: to force WS protocol
     });
 
@@ -243,36 +245,21 @@ const ChatArea = () => {
             return (
               <div
                 key={index}
-                className={`flex items-start space-x-3 ${
-                  isOwnMessage ? "justify-end flex-row-reverse" : ""
+                className={`flex items-start space-x-5 my-4 ${
+                  isOwnMessage ? "justify-end" : "justify-start"
                 }`}
               >
-                {/* Profile circle */}
-                <Image
-                  className="w-8 h-8 bg-gray-300 rounded-full flex-shrink-0"
-                  // src={item.chatWith.imageUrl || "https://cdn4.iconfinder.com/data/icons/fashion-icons/154/hipster-512.png"}
-                  src={
-                    "https://cdn4.iconfinder.com/data/icons/fashion-icons/154/hipster-512.png"
-                  }
-                  alt="User Avatar"
-                  width={32}
-                  height={32}
-                />
+                {/* Optional: Profile circle/avatar can be placed here */}
 
-                {/* Message bubble */}
                 <div
-                  className={`p-4 rounded-xl shadow text-sm 
-                ${
-                  isOwnMessage
-                    ? "bg-blue-100 text-blue-900"
-                    : "bg-gray-100 text-gray-900"
-                }
-                max-w-[300px] w-fit break-words`}
+                  className={`p-4 rounded-xl shadow text-sm max-w-[300px] w-fit break-words
+            ${
+              isOwnMessage
+                ? "bg-blue-100 text-blue-900"
+                : "bg-gray-100 text-gray-900"
+            }`}
                 >
-                  {/* Message text */}
                   <span>{message.message}</span>
-
-                  {/* Time below message, smaller & gray */}
                   <div className="text-xs text-gray-500 mt-1">
                     {getRelativeTime(message.createdAt, "Just Now")}
                   </div>
