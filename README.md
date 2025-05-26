@@ -2,29 +2,24 @@
 
 A real-time chat application powered by **Gemini AI** and **WebSockets** that allows users to send and receive messages seamlessly with intelligent responses from an integrated AI bot.
 
-🚀 **Live App:** [https://gen-ai-chi-smoky.vercel.app](https://gen-ai-chi-smoky.vercel.app)  
-🛠 **Server API:** [https://genai-891g.onrender.com](https://genai-891g.onrender.com)
+🚀 **LIVE APPLICATION LINK :** [https://gen-ai-chi-smoky.vercel.app](https://gen-ai-chi-smoky.vercel.app)  
 
----
+🛠 **SERVER API LINK :** [https://genai-891g.onrender.com](https://genai-891g.onrender.com)
 
-## 📽️ Demo Video
 
-Watch the app in action on YouTube:  
-[![Gen-AI Chat Demo](https://img.youtube.com/vi/VIDEO_ID_HERE/0.jpg)](https://www.youtube.com/watch?v=VIDEO_ID_HERE)
-
----
 
 ## 🔐 Sign In Credentials
 
 Use the following demo accounts to explore:
- USER-1
+
+🧑🏻‍🦱 USER-1
  ```
 email: user01@example.com
 
 password: user01 
 ```
 
- USER-2
+🧑🏻 USER-2
  ```
 email: user02@example.com
 
@@ -61,8 +56,8 @@ password: user02
 ### 📁 Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/gen-ai-chat-app.git
-cd gen-ai-chat-app
+git clone "https://github.com/08Uzair/genAI.git"
+cd genAI
 ```
 🖥️ Setup Server
 1. Navigate to the server directory:
@@ -117,7 +112,18 @@ npm run dev
 ```
 📸 Screenshots
 
-Real-time messaging with Gemini AI replies
+1. SIGN IN
+![Uploading Screenshot 2025-05-26 070227.png…]()
+
+2. REGISTER
+![Screenshot 2025-05-26 070258](https://github.com/user-attachments/assets/597fddcf-e6ad-47c9-9398-28df0d872686)
+
+3. HOME PAGE
+![Screenshot 2025-05-26 070449](https://github.com/user-attachments/assets/fc1f00ef-4d31-4931-ae45-c0beb0594b7e)
+
+4. INBOX
+![Screenshot 2025-05-26 070411](https://github.com/user-attachments/assets/d7d3531a-d691-4e05-a581-41a4b64770b1)
+
 
 📬 Features
 🧠 AI-generated responses using Gemini
@@ -144,18 +150,11 @@ Open a Pull Request
 📄 License
 This project is licensed under the MIT License.
 
-Made with ❤️ by [Uzer Nizamuddin Qureshi]
+Made with ❤ by Uzer Nizamuddin Qureshi
 
-yaml
-Copy code
 
 ---
 
-### Notes:
-- Replace `VIDEO_ID_HERE` in the YouTube thumbnail and link with your actual YouTube video ID.
-- If your repo structure has `client/` and `server/` folders, the instructions above are ready to go. If not, adjust the paths.
-- Replace `your-username` in the clone URL with your GitHub username.
-- Optionally, you can add badges (Vercel deploy, license, etc.) at the top for more GitHub flair.
 
 
 
