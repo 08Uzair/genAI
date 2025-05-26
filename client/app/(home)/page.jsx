@@ -98,8 +98,8 @@ export default function HeroSection() {
           <div className="relative w-full max-w-3xl aspect-[16/9] rounded-3xl overflow-hidden shadow-2xl border border-gray-300">
             <iframe
               className="w-full h-full"
-              src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-              title="Promotional Video"
+              src="https://www.youtube.com/embed/WkBINLkuq9o?si=7LFoEVLnxsW_ZPba"
+              title="Demo of Chat Application"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
