@@ -6,6 +6,20 @@ A real-time chat application powered by **Gemini AI** and **WebSockets** that al
 
 🛠 **SERVER API LINK :** [https://genai-891g.onrender.com](https://genai-891g.onrender.com)
 
+📸 Screenshots
+
+1. SIGN IN
+![image](https://github.com/user-attachments/assets/6f8f7c5f-9358-4542-94dd-e28eb4ba8eec)
+
+2. REGISTER
+![Screenshot 2025-05-26 070258](https://github.com/user-attachments/assets/597fddcf-e6ad-47c9-9398-28df0d872686)
+
+3. HOME PAGE
+![Screenshot 2025-05-26 070449](https://github.com/user-attachments/assets/fc1f00ef-4d31-4931-ae45-c0beb0594b7e)
+
+4. INBOX
+![Screenshot 2025-05-26 070411](https://github.com/user-attachments/assets/d7d3531a-d691-4e05-a581-41a4b64770b1)
+
 
 
 ## 🔐 Sign In Credentials
@@ -110,21 +124,6 @@ bash
 Copy code
 npm run dev
 ```
-📸 Screenshots
-
-1. SIGN IN
-![Uploading Screenshot 2025-05-26 070227.png…]()
-
-2. REGISTER
-![Screenshot 2025-05-26 070258](https://github.com/user-attachments/assets/597fddcf-e6ad-47c9-9398-28df0d872686)
-
-3. HOME PAGE
-![Screenshot 2025-05-26 070449](https://github.com/user-attachments/assets/fc1f00ef-4d31-4931-ae45-c0beb0594b7e)
-
-4. INBOX
-![Screenshot 2025-05-26 070411](https://github.com/user-attachments/assets/d7d3531a-d691-4e05-a581-41a4b64770b1)
-
-
 📬 Features
 🧠 AI-generated responses using Gemini
 
